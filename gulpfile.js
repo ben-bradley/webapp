@@ -53,7 +53,7 @@ gulp.task('babel', function() {
 // do all the UI compiling
 gulp.task('bundle', function() {
   var args = watchify.args;
-  args.transform = [ reactify, babelify ];
+  args.transform = [ babelify, reactify ];
   var bundler = watchify(browserify(args));
   bundler.add(PATHS.srcPublicJs);
   function bundle() {
