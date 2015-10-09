@@ -98,7 +98,10 @@ gulp.task('watch', function() {
   gulp.watch(PATHS.srcServerJs, ['babel']);
   gulp.watch(PATHS.srcPublicHtml, ['html']);
   gulp.watch(PATHS.srcPublicLess, ['less']);
-  gulp.watch(PATHS.distPublic).on('change', livereload.changed);
+  // gulp.watch(__dirname + '/dist/public/**', livereload.changed);
+  // gulp.watch('dist/public/**', livereload.changed);
+  gulp.watch(PATHS.distPublic + '/**', livereload.changed);
+  livereload.listen();
 });
 
 
