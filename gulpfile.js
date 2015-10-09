@@ -54,11 +54,8 @@ gulp.task('babel', function() {
 gulp.task('bundle', function() {
   var args = watchify.args;
   args.transform = [ reactify, babelify ];
-
   var bundler = watchify(browserify(args));
-
   bundler.add(PATHS.srcPublicJs);
-
   function bundle() {
     gutil.log('public js rebundle');
     return bundler.bundle()
@@ -70,11 +67,8 @@ gulp.task('bundle', function() {
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(PATHS.distPublic));
   }
-
   bundler.on('update', bundle);
-
-  bundle();
-
+  return bundle();
 });
 
 
@@ -98,8 +92,6 @@ gulp.task('watch', function() {
   gulp.watch(PATHS.srcServerJs, ['babel']);
   gulp.watch(PATHS.srcPublicHtml, ['html']);
   gulp.watch(PATHS.srcPublicLess, ['less']);
-  // gulp.watch(__dirname + '/dist/public/**', livereload.changed);
-  // gulp.watch('dist/public/**', livereload.changed);
   gulp.watch(PATHS.distPublic + '/**', livereload.changed);
   livereload.listen();
 });
