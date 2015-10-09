@@ -5,7 +5,7 @@ module.exports = [{
   path: '/',
   config: {
     description: 'This returns the main app view/page',
-    handler: (request, reply) => {
+    handler: function handler(request, reply) {
       reply.view('index', {
         api: 'foobar'
       });

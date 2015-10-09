@@ -2,8 +2,6 @@
 
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
-  // glob = require('glob'),
-  // path = require('path'),
   sourcemaps = require('gulp-sourcemaps'),
   source = require('vinyl-source-stream'),
   buffer = require('vinyl-buffer'),
@@ -12,10 +10,11 @@ var gulp = require('gulp'),
   reactify = require('reactify'),
   babelify = require('babelify'),
   babel = require('gulp-babel'),
-  // nodemon = require('gulp-nodemon'),
-  // livereload = require('gulp-livereload'),
+  nodemon = require('gulp-nodemon'),
+  livereload = require('gulp-livereload'),
+  runSequence = require('run-sequence'),
   uglify = require('gulp-uglify'),
-  // less = require('gulp-less'),
+  less = require('gulp-less'),
   rimraf = require('rimraf'),
   debug = require('debug')('gulpfile');
 
@@ -29,14 +28,19 @@ var PATHS = {
     'src/routes/*.js',
     '!src/public'
   ],
-  srcPublicIndex: './src/public/index.js',
-  distPublic: 'dist/public'
+  srcPublicJs: ['./src/public/index.js'],
+  srcPublicHtml: ['./src/public/*.html'],
+  srcPublicLess: ['./src/public/*.less'],
+  distPublic: 'dist/public',
+  distServer: ['dist/**', '!dist/public']
 };
+
 
 // zap the dist/ folder
 gulp.task('clean', function(next) {
   rimraf(PATHS.dist + '/*', next);
 });
+
 
 // converts server-side es6 to es5
 gulp.task('babel', function() {
@@ -45,17 +49,18 @@ gulp.task('babel', function() {
     .pipe(gulp.dest(PATHS.dist));
 });
 
+
 // do all the UI compiling
 gulp.task('bundle', function() {
-
   var args = watchify.args;
   args.transform = [ reactify, babelify ];
 
   var bundler = watchify(browserify(args));
 
-  bundler.add(PATHS.srcPublicIndex);
+  bundler.add(PATHS.srcPublicJs);
 
   function bundle() {
+    gutil.log('public js rebundle');
     return bundler.bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('index.js'))
@@ -72,87 +77,39 @@ gulp.task('bundle', function() {
 
 });
 
-// gulp.task('default', ['nodemon'], function () {
-//   debug('gulp default');
-// });
-//
-// // Compile JSX into JS
-// gulp.task('bundle', function () {
-//   bundler(__dirname + '/src/client/app.js');
-// });
-//
-// function bundler(file) {
-//   var watchArgs = watchify.args;
-//   watchArgs.transform = [reactify, babelify];
-//   var Bundler = watchify(browserify(watchArgs));
-//   var uiRoot = path.dirname(file) + '/..';
-//   Bundler.add(file);
-//
-//   debug('BUNDLE:', file);
-//
-//   function bundle() {
-//     debug('BUNDLING: ' + file);
-//     return Bundler.bundle()
-//       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-//       .pipe(source('app.js'))
-//       .pipe(gulp.dest('dist/client'));
-//   };
-//   Bundler.on('update', bundle);
-//   bundle();
-// }
-//
-// // Copy an HTML file into /dist
-// gulp.task('html', function () {
-//   glob.sync('src/client/**.html').forEach(html);
-// });
-//
-// function html(file) {
-//   gulp.src(file)
-//     .pipe(gulp.dest('dist/client'));
-// }
-//
-// // Less the CSS
-// gulp.task('less', function () {
-//   debug('LESS: src/client/*.less');
-//   glob.sync('src/client/*.less').forEach(lessIt);
-// });
-//
-// function lessIt(file) {
-//   debug('LESSING: ' + file);
-//   gulp.src(file)
-//     .pipe(less())
-//     .pipe(gulp.dest('dist/client'));
-// }
-//
-// // Monitor the app
-// gulp.task('nodemon', ['babel', 'html', 'less', 'bundle'], function () {
-//   // watch for new HTMLs and publish them
-//   gulp.watch('src/client/**.html', function (ev) {
-//     html(ev.path);
-//   });
-//
-//   gulp.watch('src/client/main.less', function (ev) {
-//     lessIt(ev.path);
-//   });
-//
-//   gulp.watch('src/server/*.js', function (ev) {
-//
-//     return gulp.src(ev.path)
-//       .pipe(babel())
-//       .pipe(gulp.dest('dist/server'));
-//   })
-//
-//   gulp.watch('dist/client/*', function (ev) {
-//     livereload.reload();
-//   });
-//
-//   livereload.listen();
-//
-//   // start the server
-//   nodemon({
-//     env: process.ENV,
-//     script: 'index.js',
-//     args: process.argv.slice(2),
-//     watch: ['dist/server/*']
-//   });
-// });
+
+// copy the html into dist
+gulp.task('html', function() {
+  return gulp.src(PATHS.srcPublicHtml, { base: PATHS.srcBase })
+    .pipe(gulp.dest(PATHS.dist));
+});
+
+
+// compile & copy the less/css
+gulp.task('less', function() {
+  return gulp.src(PATHS.srcPublicLess, { base: PATHS.srcBase })
+    .pipe(less())
+    .pipe(gulp.dest(PATHS.dist));
+});
+
+
+// set up the watches for changes
+gulp.task('watch', function() {
+  gulp.watch(PATHS.srcServerJs, ['babel']);
+  gulp.watch(PATHS.srcPublicHtml, ['html']);
+  gulp.watch(PATHS.srcPublicLess, ['less']);
+  gulp.watch(PATHS.distPublic).on('change', livereload.changed);
+});
+
+
+// fire up the server
+gulp.task('start', function() {
+  runSequence('clean', ['babel', 'bundle', 'html', 'less'], 'watch', function() {
+    nodemon({
+      env: process.ENV,
+      script: 'index.js',
+      args: process.argv.slice(2),
+      watch: PATHS.distServer
+    });
+  });
+});

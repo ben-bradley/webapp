@@ -2,6 +2,9 @@
 
 import Hapi from 'hapi';
 import config from 'config';
+import Vision from 'vision';
+import Handlebars from 'handlebars';
+import Inert from 'inert';
 
 import routes from './routes';
 
@@ -13,12 +16,19 @@ server.connection({
   port: config.port
 });
 
-server.route({
-  method: 'get',
-  path: '/',
-  handler: (request, reply) => {
-    reply('ok!');
-  }
+server.register(Vision, (err) => {
+  if (err)
+    throw new Error(err);
+    
+  server.views({
+    engines: { html: Handlebars },
+    path: __dirname + '/public'
+  });
+});
+
+server.register(Inert, (err) => {
+  if (err)
+    throw new Error(err);
 });
 
 server.route(routes.public);
