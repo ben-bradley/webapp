@@ -1,11 +1,12 @@
 'use strict';
 import React from 'react'
-// import { render } from 'react-dom'
 import { createHistory, useBasename } from 'history'
 import { Router, Route, Link } from 'react-router'
 
+import AppBar from './components/AppBar';
+
 const history = useBasename(createHistory)({
-  basename: '/query-params'
+  basename: '#'
 })
 
 class User extends React.Component {
@@ -27,6 +28,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <AppBar />
         <ul>
           <li><Link to="/user/bob" activeClassName="active">Bob</Link></li>
           <li><Link to="/user/bob" query={{ showAge: true }} activeClassName="active">Bob With Query Params</Link></li>
