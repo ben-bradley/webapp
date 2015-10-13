@@ -1,26 +1,27 @@
 'use strict';
-import React from 'react'
-import { createHistory, useBasename } from 'history'
-import { Router, Route, Link } from 'react-router'
+
+import React from 'react';
+import { createHistory, useBasename } from 'history';
+import { Router, Route, Link } from 'react-router';
 
 import AppBar from './components/AppBar';
 
 const history = useBasename(createHistory)({
-  basename: '#'
-})
+  basename: '/webapp'
+});
 
 class User extends React.Component {
   render() {
-    let { userID } = this.props.params
-    let { query } = this.props.location
-    let age = query && query.showAge ? '33' : ''
+    let { userID } = this.props.params;
+    let { query } = this.props.location;
+    let age = query && query.showAge ? '33' : '';
 
     return (
       <div className="User">
         <h1>User id: {userID}</h1>
         {age}
       </div>
-    )
+    );
   }
 }
 
@@ -36,7 +37,7 @@ class App extends React.Component {
         </ul>
         {this.props.children}
       </div>
-    )
+    );
   }
 }
 
@@ -46,4 +47,4 @@ React.render((
       <Route path="user/:userID" component={User} />
     </Route>
   </Router>
-), document.getElementById('app'))
+), document.getElementById('app'));

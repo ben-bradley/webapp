@@ -1,15 +1,20 @@
 'use strict';
 
+import handlers from '../handlers';
+
 module.exports = [{
   method: 'get',
   path: '/',
   config: {
     description: 'This returns the main app view/page',
-    handler: (request, reply) => {
-      reply.view('index', {
-        api: 'foobar'
-      });
-    }
+    handler: handlers.public.indexView
+  }
+}, {
+  method: 'get',
+  path: '/webapp/{param*}',
+  config: {
+    description: 'This returns the main app view/page',
+    handler: handlers.public.indexView
   }
 }, {
   method: 'get',
@@ -17,9 +22,7 @@ module.exports = [{
   config: {
     description: 'This tries to return an actual file to the browser',
     handler: {
-      directory: {
-        path: __dirname + '/../public'
-      }
+      directory: handlers.public.directory
     }
   }
 }];
