@@ -8,6 +8,7 @@ import App from './components/App';
 import User from './components/User';
 
 const History = useBasename(createHistory)({
+  // this needs to align with src/routes/public.js
   basename: '/webapp'
 });
 
