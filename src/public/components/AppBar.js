@@ -1,15 +1,17 @@
 'use strict';
 
-import MUI from 'material-ui';
 import React from 'react';
+import MUI from 'material-ui';
 
 class AppBar extends React.Component {
 
   render() {
-    return <MUI.AppBar
-      zDepth={0}
-      showMenuIconButton={false}
-      title="Framework Name" />
+    return (
+      <MUI.AppBar
+        zDepth={0}
+        showMenuIconButton={false}
+        title="Framework Name" />
+    );
   }
 
 }
