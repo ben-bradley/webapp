@@ -30,22 +30,22 @@ var PATHS = {
     'src/routes/*.js',
     '!src/public'
   ],
-  srcPublicJs: ['./src/public/index.js'],
-  srcPublicHtml: ['./src/public/*.html'],
-  srcPublicLess: ['./src/public/*.less'],
+  srcPublicJs: [ './src/public/index.js' ],
+  srcPublicHtml: [ './src/public/*.html' ],
+  srcPublicLess: [ './src/public/*.less' ],
   distPublic: 'dist/public',
-  distServer: ['dist/**', '!dist/public']
+  distServer: [ 'dist/**', '!dist/public' ]
 };
 
 
 // zap the dist/ folder
-gulp.task('clean', function(next) {
+gulp.task('clean', function _clean(next) {
   rimraf(PATHS.dist + '/*', next);
 });
 
 
 // converts server-side es6 to es5
-gulp.task('babel', function() {
+gulp.task('babel', function _babel() {
   return gulp.src(PATHS.srcServerJs, { base: PATHS.srcBase })
     .pipe(babel())
     .pipe(gulp.dest(PATHS.dist));
@@ -53,10 +53,13 @@ gulp.task('babel', function() {
 
 
 // do all the UI compiling
-gulp.task('bundle', function() {
+gulp.task('bundle', function _bundle() {
   var args = watchify.args;
+
   args.transform = [ babelify, reactify ];
+
   var bundler = watchify(browserify(args));
+
   bundler.add(PATHS.srcPublicJs);
 
   function bundle() {
@@ -82,14 +85,14 @@ gulp.task('bundle', function() {
 
 
 // copy the html into dist
-gulp.task('html', function() {
+gulp.task('html', function _html() {
   return gulp.src(PATHS.srcPublicHtml, { base: PATHS.srcBase })
     .pipe(gulp.dest(PATHS.dist));
 });
 
 
 // compile & copy the less/css
-gulp.task('less', function() {
+gulp.task('less', function _less() {
   return gulp.src(PATHS.srcPublicLess, { base: PATHS.srcBase })
     .pipe(less())
     .pipe(gulp.dest(PATHS.dist));
@@ -97,18 +100,18 @@ gulp.task('less', function() {
 
 
 // set up the watches for changes
-gulp.task('watch', function() {
-  gulp.watch(PATHS.srcServerJs, ['babel']);
-  gulp.watch(PATHS.srcPublicHtml, ['html']);
-  gulp.watch(PATHS.srcPublicLess, ['less']);
+gulp.task('watch', function _watch() {
+  gulp.watch(PATHS.srcServerJs, [ 'babel' ]);
+  gulp.watch(PATHS.srcPublicHtml, [ 'html' ]);
+  gulp.watch(PATHS.srcPublicLess, [ 'less' ]);
   gulp.watch(PATHS.distPublic + '/**', livereload.changed);
   livereload.listen();
 });
 
 
 // fire up the server
-gulp.task('start', function() {
-  runSequence('clean', ['babel', 'bundle', 'html', 'less'], 'watch', function() {
+gulp.task('start', function _start() {
+  runSequence('clean', [ 'babel', 'bundle', 'html', 'less' ], 'watch', function _nodemon() {
     nodemon({
       env: process.ENV,
       script: 'index.js',

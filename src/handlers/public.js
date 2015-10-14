@@ -1,14 +1,14 @@
 'use strict';
 
-function indexView(request, reply) {
+function indexHtml(request, reply) {
   reply.view('index', {
     api: 'foobar'
   });
 }
 
 module.exports = {
-  indexView,
-  directory: {
-    path: __dirname + '/../public'
-  }
+  indexHtml,
+  indexCss: { file: __dirname + '/../public/index.css' },
+  indexJs: { file: __dirname + '/../public/index.js' },
+  directory: { path: __dirname + '/../public' }
 };
