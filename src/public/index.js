@@ -9,16 +9,15 @@ import User from './components/User';
 
 const History = useBasename(createHistory)({
   // this needs to align with src/routes/public.js
-  basename: '/webapp'
+  basename: '/' + APPNAME
 });
 
 const Routes = [{
   path: '/',
-  component: App,
-  childRoutes: [{
-    path: 'user/:userID',
-    component: User
-  }]
+  component: App
+}, {
+  path: '/rows/:rows/cols/:cols',
+  component: App
 }];
 
 React.render((

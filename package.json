@@ -11,6 +11,7 @@
   "dependencies": {
     "config": "^1.16.0",
     "debug": "^2.2.0",
+    "eventemitter2": "^0.4.14",
     "font-awesome": "^4.4.0",
     "glob": "^5.0.15",
     "handlebars": "^4.0.3",

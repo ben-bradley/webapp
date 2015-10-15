@@ -2,7 +2,9 @@
 
 function indexHtml(request, reply) {
   reply.view('index', {
-    api: 'foobar'
+    api: 'foobar',
+    title: 'Set Solver',
+    appName: 'setsolver'
   });
 }
 

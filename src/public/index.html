@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Framework Name</title>
+    <title>{{title}}</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' href='/index.css'>
     <link rel='shortcut icon' href='/favicon.ico' />
@@ -13,7 +13,9 @@
     <script type='text/javascript'>
       // this var is populated via handlebars templating on the server
       // livereload test
-      var API = '{{api}}';
+      const API = '{{api}}',
+        APPNAME = '{{appName}}',
+        TITLE = '{{title}}';
     </script>
     <script src='/index.js'></script>
   </body>

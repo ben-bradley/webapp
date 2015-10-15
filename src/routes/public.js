@@ -12,7 +12,7 @@ module.exports = [ {
 }, {
   method: 'get',
   // this needs to align with src/public/index.js
-  path: '/webapp/{param*}',
+  path: '/setsolver/{param*}',
   config: {
     description: 'This returns the main app view/page',
     handler: handlers.public.indexHtml
