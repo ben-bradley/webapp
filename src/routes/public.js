@@ -2,7 +2,7 @@
 
 import handlers from '../handlers';
 
-module.exports = [ {
+export default [ {
   method: 'get',
   path: '/',
   config: {

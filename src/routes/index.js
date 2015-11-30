@@ -2,8 +2,6 @@
 
 import publicRoutes from './public';
 
-let routes = {
+export default {
   public: publicRoutes
 };
-
-module.exports = routes;

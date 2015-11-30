@@ -2,8 +2,6 @@
 
 import publicHandlers from './public';
 
-let handlers = {
+export default {
   public: publicHandlers
 };
-
-module.exports = handlers;
