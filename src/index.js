@@ -16,8 +16,8 @@ server.connection({
   port: config.port
 });
 
-debug('registering Vision');
-server.register(Vision, (err) => {
+debug('registering plugins...');
+server.register([ Vision, Inert ], (err) => {
   if (err)
     throw new Error(err);
 
@@ -25,24 +25,16 @@ server.register(Vision, (err) => {
     engines: { html: Handlebars },
     path: __dirname + '/public'
   });
-  debug('registered Vision');
+  debug('registered plugins!');
 });
 
-debug('registering Inert');
-server.register(Inert, (err) => {
-  if (err)
-    throw new Error(err);
-  debug('registered Inert');
-});
-
-debug('adding routes');
+debug('adding routes...');
 server.route(routes.public);
-debug('added routes');
 
-debug('starting server');
+debug('starting server...');
 server.start((err) => {
   if (err)
     throw new Error(err);
   console.log('server started on ' + config.port);
-  debug('started server');
+  debug('started server!');
 });
