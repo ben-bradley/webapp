@@ -10,7 +10,6 @@ var gulp = require('gulp'),
   browserify = require('browserify'),
   watchify = require('watchify'),
   reactify = require('reactify'),
-  babelify = require('babelify'),
   babel = require('gulp-babel'),
   nodemon = require('gulp-nodemon'),
   livereload = require('gulp-livereload'),
@@ -56,15 +55,15 @@ gulp.task('babel', function _babel() {
 gulp.task('bundle', function _bundle() {
   var args = watchify.args;
 
-  args.transform = [ babelify, reactify ];
-
   var bundler = watchify(browserify(args));
 
   bundler.add(PATHS.srcPublicJs);
 
   function bundle() {
     gutil.log('public js rebundle');
-    var bundleStream = bundler.bundle()
+    var bundleStream = bundler
+      .transform('babelify', { presets: [ 'es2015', 'react' ] })
+      .bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('index.js'));
 
