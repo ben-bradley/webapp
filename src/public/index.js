@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { createHistory, useBasename } from 'history';
 import { Router, Route, Link } from 'react-router';
 
@@ -21,6 +22,6 @@ const Routes = [{
   }]
 }];
 
-React.render((
+ReactDOM.render((
   <Router history={History} routes={Routes} />
 ), document.getElementById('app'));
