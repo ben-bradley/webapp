@@ -2,6 +2,6 @@
 
 import publicRoutes from './public';
 
-export default {
-  public: publicRoutes
-};
+const routes = [].concat(publicRoutes);
+
+export default routes;

@@ -29,7 +29,7 @@ server.register([ Vision, Inert ], (err) => {
 });
 
 debug('adding routes...');
-server.route(routes.public);
+server.route(routes);
 
 debug('starting server...');
 server.start((err) => {
