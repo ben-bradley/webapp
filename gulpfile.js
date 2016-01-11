@@ -119,3 +119,5 @@ gulp.task('start', function _start() {
     });
   });
 });
+
+gulp.task('default', [ 'start' ]);
