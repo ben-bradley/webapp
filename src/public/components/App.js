@@ -4,14 +4,48 @@
 import React from 'react';
 import { Link } from 'react-router';
 import MUI from 'material-ui';
+import Nes from 'nes';
 
 const { ThemeManager } = MUI.Styles;
 
 // Import Components
 import Theme from './Theme';
 import AppBar from './AppBar';
+import Clock from './Clock';
 
-class App extends React.Component {
+export default class App extends React.Component {
+
+  constructor() {
+    super();
+
+    let sock = new Nes.Client('ws://localhost:3000');
+
+    this.state = {
+      time: 'connecting...'
+    };
+
+    sock.connect((err) => {
+      if (err)
+        return console.error(err.message);
+
+      console.log('connected!');
+
+      /* This handles server.broadcast() */
+      // sock.onUpdate = (time) => {
+      //   this.setState({ time });
+      // } ;
+
+      /* This handles server.publish() */
+      sock.subscribe('/ws/time', (time) => {
+        console.log('time:', time);
+        this.setState({ time });
+      }, (err) => {
+        if (err)
+          console.error(err);
+      });
+
+    });
+  }
 
   getChildContext() {
     return {
@@ -23,6 +57,7 @@ class App extends React.Component {
     return (
       <div>
         <AppBar />
+        <Clock time={this.state.time} />
         <ul>
           <li><Link to="/user/bob" activeClassName="active">Bob</Link></li>
           <li><Link to="/user/bob" query={{ showAge: true }} activeClassName="active">Bob With Query Params</Link></li>
@@ -37,5 +72,3 @@ class App extends React.Component {
 App.childContextTypes = {
   muiTheme: React.PropTypes.object
 };
-
-module.exports = App;
