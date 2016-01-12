@@ -27,7 +27,8 @@ var PATHS = {
     'src/routes/*.js',
     '!src/public'
   ],
-  srcPublicJs: [ './src/public/index.js' ],
+  srcPublicIndex: [ './src/public/index.js' ],
+  srcPublicJs: [ '!./src/public/index.js', './src/public/*.js' ],
   srcPublicHtml: [ './src/public/*.html' ],
   srcPublicLess: [ './src/public/*.less' ],
   distPublic: 'dist/public',
@@ -47,7 +48,7 @@ function _babel() {
 function _bundle() {
   var bundler = watchify(browserify(watchify.args));
 
-  bundler.add(PATHS.srcPublicJs);
+  bundler.add(PATHS.srcPublicIndex);
 
   function rebundle() {
     gutil.log('public js rebundle');
@@ -66,6 +67,11 @@ function _bundle() {
   bundler.on('update', rebundle);
 
   return rebundle();
+}
+
+function _js() {
+  return gulp.src(PATHS.srcPublicJs, { base: PATHS.srcBase })
+    .pipe(gulp.dest(PATHS.dist));
 }
 
 function _html() {
@@ -88,7 +94,7 @@ function _watch() {
 }
 
 function _start() {
-  runSequence('clean', [ 'babel', 'bundle', 'html', 'less' ], 'watch', function _nodemon() {
+  runSequence('clean', [ 'babel', 'bundle', 'html', 'less', 'js' ], 'watch', function _nodemon() {
     nodemon({
       env: gutil.env.type,
       script: 'index.js',
@@ -107,6 +113,8 @@ gulp.task('babel', _babel);
 gulp.task('bundle', _bundle);
 
 gulp.task('html', _html);
+
+gulp.task('js', _js);
 
 gulp.task('less', _less);
 

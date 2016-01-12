@@ -1,9 +1,9 @@
 'use strict';
 
+import config from 'config';
+
 function indexHtml(request, reply) {
-  reply.view('index', {
-    api: 'foobar'
-  });
+  reply.view('index', config.browserGlobals);
 }
 
 export default {

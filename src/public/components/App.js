@@ -18,7 +18,7 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    let sock = new Nes.Client('ws://localhost:3000');
+    let sock = new Nes.Client(WEBSOCKET);
 
     this.state = {
       time: 'connecting...'
