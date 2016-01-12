@@ -1,7 +1,5 @@
 'use strict';
 
-const ENV = process.env.NODE_ENV;
-
 var gulp = require('gulp'),
   gutil = require('gulp-util'),
   sourcemaps = require('gulp-sourcemaps'),
@@ -36,7 +34,6 @@ var PATHS = {
   distServer: [ 'dist/**', '!dist/public' ]
 };
 
-
 function _clean(next) {
   rimraf(PATHS.dist + '/*', next);
 }
@@ -48,33 +45,27 @@ function _babel() {
 }
 
 function _bundle() {
-  var args = watchify.args;
-
-  var bundler = watchify(browserify(args));
+  var bundler = watchify(browserify(watchify.args));
 
   bundler.add(PATHS.srcPublicJs);
 
-  function bundle() {
+  function rebundle() {
     gutil.log('public js rebundle');
-    var bundleStream = bundler
+    return bundler
       .transform('babelify', { presets: [ 'es2015', 'react' ] })
       .bundle()
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-      .pipe(source('index.js'));
-
-    if (ENV === 'production')
-      bundleStream
-        .pipe(buffer())
-        .pipe(sourcemaps.init())
-        .pipe(uglify())
-        .pipe(sourcemaps.write('.'));
-
-    return bundleStream.pipe(gulp.dest(PATHS.distPublic));
+      .pipe(source('index.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init())
+      .pipe(gutil.env.type === 'production' ? uglify() : gutil.noop())
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(PATHS.distPublic));
   }
 
-  bundler.on('update', bundle);
+  bundler.on('update', rebundle);
 
-  return bundle();
+  return rebundle();
 }
 
 function _html() {
@@ -99,13 +90,15 @@ function _watch() {
 function _start() {
   runSequence('clean', [ 'babel', 'bundle', 'html', 'less' ], 'watch', function _nodemon() {
     nodemon({
-      env: process.ENV,
+      env: gutil.env.type,
       script: 'index.js',
       args: process.argv.slice(2),
       watch: PATHS.distServer
     });
   });
 }
+
+// TODO: gulp.task('test', _test);
 
 gulp.task('clean', _clean);
 
