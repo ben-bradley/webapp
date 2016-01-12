@@ -37,22 +37,17 @@ var PATHS = {
 };
 
 
-// zap the dist/ folder
-gulp.task('clean', function _clean(next) {
+function _clean(next) {
   rimraf(PATHS.dist + '/*', next);
-});
+}
 
-
-// converts server-side es6 to es5
-gulp.task('babel', function _babel() {
+function _babel() {
   return gulp.src(PATHS.srcServerJs, { base: PATHS.srcBase })
     .pipe(babel())
     .pipe(gulp.dest(PATHS.dist));
-});
+}
 
-
-// do all the UI compiling
-gulp.task('bundle', function _bundle() {
+function _bundle() {
   var args = watchify.args;
 
   var bundler = watchify(browserify(args));
@@ -80,36 +75,28 @@ gulp.task('bundle', function _bundle() {
   bundler.on('update', bundle);
 
   return bundle();
-});
+}
 
-
-// copy the html into dist
-gulp.task('html', function _html() {
+function _html() {
   return gulp.src(PATHS.srcPublicHtml, { base: PATHS.srcBase })
     .pipe(gulp.dest(PATHS.dist));
-});
+}
 
-
-// compile & copy the less/css
-gulp.task('less', function _less() {
+function _less() {
   return gulp.src(PATHS.srcPublicLess, { base: PATHS.srcBase })
     .pipe(less())
     .pipe(gulp.dest(PATHS.dist));
-});
+}
 
-
-// set up the watches for changes
-gulp.task('watch', function _watch() {
+function _watch() {
   gulp.watch(PATHS.srcServerJs, [ 'babel' ]);
   gulp.watch(PATHS.srcPublicHtml, [ 'html' ]);
   gulp.watch(PATHS.srcPublicLess, [ 'less' ]);
   gulp.watch(PATHS.distPublic + '/**', livereload.changed);
   livereload.listen();
-});
+}
 
-
-// fire up the server
-gulp.task('start', function _start() {
+function _start() {
   runSequence('clean', [ 'babel', 'bundle', 'html', 'less' ], 'watch', function _nodemon() {
     nodemon({
       env: process.ENV,
@@ -118,6 +105,20 @@ gulp.task('start', function _start() {
       watch: PATHS.distServer
     });
   });
-});
+}
 
-gulp.task('default', [ 'start' ]);
+gulp.task('clean', _clean);
+
+gulp.task('babel', _babel);
+
+gulp.task('bundle', _bundle);
+
+gulp.task('html', _html);
+
+gulp.task('less', _less);
+
+gulp.task('watch', _watch);
+
+gulp.task('start', _start);
+
+gulp.task('default', _start);
