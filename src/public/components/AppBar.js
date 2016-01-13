@@ -3,7 +3,7 @@
 import React from 'react';
 import MUI from 'material-ui';
 
-class AppBar extends React.Component {
+export default class AppBar extends React.Component {
 
   render() {
     return (
@@ -15,5 +15,3 @@ class AppBar extends React.Component {
   }
 
 }
-
-module.exports = AppBar;

@@ -4,7 +4,7 @@ import MUI from 'material-ui';
 let { Colors, Spacing } = MUI.Styles;
 let { ColorManipulator } = MUI.Utils;
 
-let Theme = {
+export default {
   spacing: Spacing,
   fontFamily: 'Roboto, sans-serif',
   palette: {
@@ -21,5 +21,3 @@ let Theme = {
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3),
   },
 };
-
-module.exports = Theme;

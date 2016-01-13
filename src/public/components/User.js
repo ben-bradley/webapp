@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-class User extends React.Component {
+export default class User extends React.Component {
   render() {
     let { userID } = this.props.params;
     let { query } = this.props.location;
@@ -16,5 +16,3 @@ class User extends React.Component {
     );
   }
 }
-
-module.exports = User;
