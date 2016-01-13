@@ -93,15 +93,17 @@ function _watch() {
   livereload.listen();
 }
 
-function _start() {
-  runSequence('clean', [ 'babel', 'bundle', 'html', 'less', 'js' ], 'watch', function _nodemon() {
-    nodemon({
-      env: gutil.env.type,
-      script: 'index.js',
-      args: process.argv.slice(2),
-      watch: PATHS.distServer
-    });
+function _nodemon() {
+  nodemon({
+    env: gutil.env.type,
+    script: 'index.js',
+    args: process.argv.slice(2),
+    watch: PATHS.distServer
   });
+}
+
+function _start() {
+  runSequence('clean', [ 'babel', 'bundle', 'html', 'less', 'js' ], 'watch', 'nodemon');
 }
 
 // TODO: gulp.task('test', _test);
@@ -119,6 +121,8 @@ gulp.task('js', _js);
 gulp.task('less', _less);
 
 gulp.task('watch', _watch);
+
+gulp.task('nodemon', _nodemon);
 
 gulp.task('start', _start);
 
