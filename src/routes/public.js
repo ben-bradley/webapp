@@ -1,34 +1,30 @@
 'use strict';
 
+import config from 'config';
+
 import handlers from '../handlers';
+
+const { directory, index } = handlers.public;
 
 export default [ {
   method: 'get',
   path: '/',
   config: {
     description: 'This returns the main app view/page',
-    handler: handlers.public.indexHtml
+    handler: index
   }
 }, {
   method: 'get',
-  // this needs to align with src/public/index.js
-  path: '/webapp/{param*}',
+  path: '/' + config.name + '/{p*}',
   config: {
     description: 'This returns the main app view/page',
-    handler: handlers.public.indexHtml
+    handler: index
   }
 }, {
   method: 'get',
-  path: '/index.js',
+  path: '/{p*}',
   config: {
-    description: 'This returns the actual file to the browser',
-    handler: handlers.public.indexJs
-  }
-}, {
-  method: 'get',
-  path: '/index.css',
-  config: {
-    description: 'This returns the actual file to the browser',
-    handler: handlers.public.indexCss
+    description: 'This is the default public route',
+    handler: { directory }
   }
 } ];

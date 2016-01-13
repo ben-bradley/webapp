@@ -1,14 +1,18 @@
 'use strict';
 
 import config from 'config';
+import Debug from 'debug';
 
-function indexHtml(request, reply) {
-  reply.view('index', config.browserGlobals);
-}
+const debug = new Debug('webapp:/handlers/public');
+const { browserGlobals } = config;
+
+debug('browserGlobals: ' + JSON.stringify(browserGlobals));
 
 export default {
-  indexHtml,
-  indexCss: { file: __dirname + '/../public/index.css' },
-  indexJs: { file: __dirname + '/../public/index.js' },
-  directory: { path: __dirname + '/../public' }
+  index(request, reply) {
+    reply.view('index', browserGlobals);
+  },
+  directory: {
+    path: __dirname + '/../public'
+  }
 };

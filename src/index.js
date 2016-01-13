@@ -6,10 +6,11 @@ import Vision from 'vision';
 import Handlebars from 'handlebars';
 import Inert from 'inert';
 import Nes from 'nes';
+import Debug from 'debug';
 
 import routes from './routes';
 
-let debug = require('debug')('index');
+let debug = new Debug(config.name + ':/index');
 
 let server = new Hapi.Server();
 
