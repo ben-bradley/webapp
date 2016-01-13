@@ -10,7 +10,7 @@ export default class AppBar extends React.Component {
       <MUI.AppBar
         zDepth={0}
         showMenuIconButton={false}
-        title="Framework Name" />
+        title={ TITLE } />
     );
   }
 

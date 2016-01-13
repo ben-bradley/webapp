@@ -4,6 +4,7 @@
   "browserGlobals" : {
     "WEBSOCKET": "ws://localhost:3000",
     "API": "http://localhost:3000",
-    "NAME": "webapp"
+    "NAME": "webapp",
+    "TITLE": "Web App Title"
   }
 }
