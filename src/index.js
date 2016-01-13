@@ -29,10 +29,11 @@ server.register([ Vision, Inert, Nes ], (err) => {
   });
 
   /* Broadcasting */
-  // setInterval(() => server.broadcast(new Date()), 1000);
+  setInterval(() => server.broadcast(new Date()), 500);
 
   /* Namespace for websockets */
   server.subscription('/ws/{app}');
+  setInterval(() => server.publish('/ws/time', new Date()), 1100);
 
   debug('registered plugins!');
 });
@@ -47,7 +48,4 @@ server.start((err) => {
 
   console.log('server started on ' + config.port);
   debug('started server!');
-
-  /* Publish the current server time every 1sec */
-  setInterval(() => server.publish('/ws/time', new Date()), 1000);
 });

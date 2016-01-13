@@ -31,18 +31,10 @@ export default class App extends React.Component {
       console.log('connected!');
 
       /* This handles server.broadcast() */
-      // sock.onUpdate = (time) => {
-      //   this.setState({ time });
-      // } ;
+      sock.onUpdate = (time) => this.setState({ time });
 
       /* This handles server.publish() */
-      sock.subscribe('/ws/time', (time) => {
-        console.log('time:', time);
-        this.setState({ time });
-      }, (err) => {
-        if (err)
-          console.error(err);
-      });
+      sock.subscribe('/ws/time', (time) => this.setState({ time }));
 
     });
   }
